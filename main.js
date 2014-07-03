@@ -815,17 +815,18 @@ var fullMetalData = {
 var tableStart = 0;
 var tableEnd = 19;
 
-var createTable = function(start, stop, sortFunction) {
+var createTable = function(start, stop) {
 	// create table header
+	$(".data-table table").empty();
 	$(".data-table table").append(
 		"<tr>" +
 			"<th>result</th>" +
- 			"<th>" + fullMetalData.cols[0] + "</th>" +
- 			"<th>" + fullMetalData.cols[1] + "</th>" +
-			"<th>" + fullMetalData.cols[2] + "</th>" +
-			"<th>" + fullMetalData.cols[3] + "</th>" +
-			"<th>" + fullMetalData.cols[4] + "</th>" +
-			"<th>" + fullMetalData.cols[5] + "</th>" +
+ 			"<th class = 'header-button'>" + fullMetalData.cols[0] + "</th>" +
+ 			"<th class = 'header-button'>" + fullMetalData.cols[1] + "</th>" +
+			"<th class = 'header-button'>" + fullMetalData.cols[2] + "</th>" +
+			"<th class = 'header-button'>" + fullMetalData.cols[3] + "</th>" +
+			"<th class = 'header-button'>" + fullMetalData.cols[4] + "</th>" +
+			"<th class = 'header-button'>" + fullMetalData.cols[5] + "</th>" +
 		"</tr>" 
 		)
 
@@ -845,6 +846,62 @@ var createTable = function(start, stop, sortFunction) {
  	}
  }
 
+// function to sort main data by column
+var sortByColumn = function(index, reverse) {
+	if (reverse) {
+		// console.log("if working")
+		fullMetalData.data = _.sortBy(fullMetalData.data, function(item) {return item[index]});
+		fullMetalData.data.reverse();
+	}
+	else {
+		fullMetalData.data = _.sortBy(fullMetalData.data, function(item) {return item[index]});
+	}	
+}
+	// console.log(reverse)
+	// if (reverse) {
+	// 	fullMetalData.data.sort(function(a, b) {
+	// 		if (a[index] < b[index]) {
+	// 			return -1;
+	// 		}
+	// 		else if (a[index] > b[index]) {
+	// 			return 1;
+	// 		}
+	// 		else {
+	// 			return 0;
+	// 		}
+	// 	fullMetalData.data.reverse();
+	// 	})
+	// }
+	// else {
+	// 	fullMetalData.data.sort(function(a, b) {
+	// 		if (a[index] < b[index]) {
+	// 			return -1;
+	// 		}
+	// 		else if (a[index] > b[index]) {
+	// 			return 1;
+	// 		}
+	// 		else {
+	// 			return 0;
+	// 		}
+	// 	})
+	// }
+
+
+
+
+ var columnTracker = function(column) {
+ 	var columnsValue = {username: false, fullname: false , region: false , race: false, wins: true , losses: true};
+ 	console.log("current test: ", columnsValue[column])
+	if(columnsValue[column]) {
+		columnsValue[column] = false;
+	}
+	else {
+		columnsValue[column] = true;
+	}
+	return columnsValue[column]
+
+ }
+
 
 	$(document).on('ready', function() {
 	// create table on load
@@ -854,7 +911,6 @@ var createTable = function(start, stop, sortFunction) {
 	// next button
 	$(document).on('click', '.next-button', function() {
 		if(fullMetalData.data.length >= tableEnd + 20) {
-			$(".data-table table").empty();
 			tableStart += 20
 			tableEnd += 20
 			createTable(tableStart, tableEnd);
@@ -864,7 +920,6 @@ var createTable = function(start, stop, sortFunction) {
 	// previous button
 	$(document).on('click', '.previous-button', function() {
 		if(tableStart - 20 >= 0) {
-			$(".data-table table").empty();
 			tableStart -= 20
 			tableEnd -= 20
 			createTable(tableStart, tableEnd);
@@ -873,17 +928,31 @@ var createTable = function(start, stop, sortFunction) {
 
 	// last button
 	$(document).on('click', '.last-button', function() {
-		$(".data-table table").empty();
 		tableStart = fullMetalData.data.length - 20
-		tableEnd = fullMetalData.data.length
+		tableEnd = fullMetalData.data.length - 1
 		createTable(tableStart, tableEnd);
 	})
 
 	// first button
 	$(document).on('click', '.first-button', function() {
-		$(".data-table table").empty();
 		tableStart = 0
 		tableEnd = 19
 		createTable(tableStart, tableEnd);
+	})
+
+	// sort by column
+	$(document).on('click', ".header-button", function() {
+		var columnNumber = fullMetalData.cols.indexOf($(this).text())
+		var columnName = $(this).text()
+
+		console.log("columnName: " + columnName)
+		// console.log("columnTracker: " + columnTracker(columnName))
+
+
+		sortByColumn(columnNumber, columnTracker(columnName));
+		tableStart = 0;
+		tableEnd = 19;
+		createTable(tableStart, tableEnd);
+
 	})
 });

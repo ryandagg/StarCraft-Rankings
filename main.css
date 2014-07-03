@@ -15,6 +15,10 @@ table {
 	padding: 3px 7px 2px 7px;
 }
 
+.data-table th:hover{
+	color: blue;
+}
+
 .data-table td {
 	font-size: 1.2em;
 	border: 1px solid #98bf21;
