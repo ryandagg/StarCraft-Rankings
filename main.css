@@ -4,19 +4,41 @@
 
 table {
 	font-family: verdana,helvetica,arial,sans-serif;
+	margin-bottom: 4%;
 }
-.data-table th{
-	font-size: 1.4em;
+.data-table th, .stats-table th{
 	text-align: left;
 	padding-bottom: 4px;
-	background-color: #A7C942;
-	color: #fff;
 	border: 1px solid #98bf21;
 	padding: 3px 7px 2px 7px;
 }
 
+.stats-table th{
+	background-color: #A7C942;
+	color: #fff;
+	width: 1%;
+}
+
+.stats-table td{
+	font-size: 1.2em;
+	border: 1px solid #98bf21;
+	padding: 3px 7px 2px 7px;
+	line-height: 130%;
+}
+
+.data-table th{
+	font-size: 1.4em;
+	background-color: #A7C942;
+	color: #fff;
+	/*width: 1%;*/
+}
+
 .data-table th:hover{
 	color: blue;
+}
+
+.data-table th:first-child:hover{
+	color: white;
 }
 
 .data-table td {
@@ -26,7 +48,7 @@ table {
 	line-height: 130%;
 }
 
-tr:nth-child(even) {
+.data-table tr:nth-child(even) {
 	background-color: #EAF2D3;
 }
 
@@ -36,5 +58,29 @@ tr:nth-child(even) {
 }
 
 button {
-	margin-right: 15%;
+	margin-right: 2%;
+}
+
+/*username column*/
+.data-table td:nth-child(2) {
+	width: 100px;
+}
+
+/*fullname column*/
+.data-table td:nth-child(3) {
+	width: 3900px;
+}
+
+/*region column*/
+.data-table td:nth-child(4) {
+	width: 200px;
+}
+
+/*race column*/
+.data-table td:nth-child(5) {
+	width: 250px;
+}
+
+.specific-button {
+	display: inline;
 }

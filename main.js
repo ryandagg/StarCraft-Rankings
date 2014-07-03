@@ -1,3 +1,9 @@
+/* To Do:
+-fix column widths for tables | APPROXIMATELY DONE
+
+
+*/
+
 var fullMetalData = {
 	cols: [
 		"username",
@@ -233,10 +239,10 @@ var fullMetalData = {
 		280
 		],
 		[
-		"dapibus",
-		"Amery Zamora",
+		"ggoDeye",
+		"Ryan Dagg",
 		"Europe",
-		"Terran",
+		"Zerg",
 		449,
 		8
 		],
@@ -811,6 +817,9 @@ var fullMetalData = {
 	]	
 }
 
+// declare a variable for the main data section of fullMetalData
+data = fullMetalData.data;
+
 // define variables to be used in table generation
 var tableStart = 0;
 var tableEnd = 19;
@@ -835,12 +844,12 @@ var createTable = function(start, stop) {
  		$(".data-table table").append(
  			"<tr>" +
  				"<td>" + (i + 1) + "</td>" +
-	 			"<td>" + fullMetalData.data[i][0] + "</td>" +
-	 			"<td>" + fullMetalData.data[i][1] + "</td>" +
-				"<td>" + fullMetalData.data[i][2] + "</td>" +
-				"<td>" + fullMetalData.data[i][3] + "</td>" +
-				"<td>" + fullMetalData.data[i][4] + "</td>" +
-				"<td>" + fullMetalData.data[i][5] + "</td>" +
+	 			"<td>" + data[i][0] + "</td>" +
+	 			"<td>" + data[i][1] + "</td>" +
+				"<td>" + data[i][2] + "</td>" +
+				"<td>" + data[i][3] + "</td>" +
+				"<td>" + data[i][4] + "</td>" +
+				"<td>" + data[i][5] + "</td>" +
 			"</tr>" 
 		)	
  	}
@@ -850,49 +859,21 @@ var createTable = function(start, stop) {
 var sortByColumn = function(index, reverse) {
 	if (reverse) {
 		// console.log("if working")
-		fullMetalData.data = _.sortBy(fullMetalData.data, function(item) {return item[index]});
-		fullMetalData.data.reverse();
+		data = _.sortBy(data, function(item) {return item[index]});
+		data.reverse();
 	}
 	else {
-		fullMetalData.data = _.sortBy(fullMetalData.data, function(item) {return item[index]});
+		data = _.sortBy(data, function(item) {return item[index]});
 	}	
 }
-	// console.log(reverse)
-	// if (reverse) {
-	// 	fullMetalData.data.sort(function(a, b) {
-	// 		if (a[index] < b[index]) {
-	// 			return -1;
-	// 		}
-	// 		else if (a[index] > b[index]) {
-	// 			return 1;
-	// 		}
-	// 		else {
-	// 			return 0;
-	// 		}
-	// 	fullMetalData.data.reverse();
-	// 	})
-	// }
-	// else {
-	// 	fullMetalData.data.sort(function(a, b) {
-	// 		if (a[index] < b[index]) {
-	// 			return -1;
-	// 		}
-	// 		else if (a[index] > b[index]) {
-	// 			return 1;
-	// 		}
-	// 		else {
-	// 			return 0;
-	// 		}
-	// 	})
-	// }
 
+// create a variable to be used by columnTracker function. Keeps track of ascending versus descending initial sort method. Ultimately used by sortByColumn function to determin if reversing should occur.
+var columnsValue = {username: true, fullname: true , region: true , race: true, wins: true , losses: false};
 
-
-
- var columnTracker = function(column) {
- 	var columnsValue = {username: false, fullname: false , region: false , race: false, wins: true , losses: true};
- 	console.log("current test: ", columnsValue[column])
+// used to flip values in columnsValue for use by sortByColumn to determine if column should display ascending or descending.
+var columnTracker = function(column) {
 	if(columnsValue[column]) {
+		console.log("current test: ", columnsValue[column])
 		columnsValue[column] = false;
 	}
 	else {
@@ -900,17 +881,78 @@ var sortByColumn = function(index, reverse) {
 	}
 	return columnsValue[column]
 
- }
+}
 
 
-	$(document).on('ready', function() {
+var totalGames = function() {
+ 	var total = 0;
+ 	_.each(data, function(element) {
+ 		total += element[4];
+ 	})
+ 	return total;
+}
+
+var totalGamesLosses = function() {
+ 	var total = 0;
+ 	_.each(data, function(element) {
+ 		total += element[5];
+ 	})
+ 	return total;
+}
+
+var totalPlayers = data.length;
+
+var racePopularity = function(race) {
+ 	var total = 0;
+ 	_.each(data, function(element) {
+ 		if(element[3] === race) {
+ 			total++ ;
+ 		}
+ 	})
+ 	return (total / data.length * 100) + "%";
+}
+
+// manage name of specific nav buttons
+var nameButtons = function(dataSample) {
+	if (typeof(dataSample) === "string") {
+		return dataSample[0] + dataSample[1];
+	}
+	else {
+		return dataSample;
+	}
+}
+
+// create dynamic buttons for scrolling based on sort method
+// THIS IS NOT WORKING | it is iterating past data.length
+// a possible solution is to loop through data and creat a smaller array to loop through. This will break the problem down into a smaller, easier to understand piece.
+var createNavButtons = function(index) {
+	$(".specific-button").empty();
+	for (var i = 0; i < data.length ; i += 20) {
+		$(".specific-button").append(
+			"<button>" + String(nameButtons(data[i][index])) + " - " + String(nameButtons(data[i + 20][index])) + "</button>");
+	}
+}
+
+
+
+// docuement on ready
+$(document).on('ready', function() {
+	// input stats into stats-table
+	$(".total-games").text(totalGames());
+	$(".total-players").text(totalPlayers);
+	$(".zerg-percent").text(racePopularity("Zerg"));
+	$(".terran-percent").text(racePopularity("Terran"));
+	$(".protoss-percent").text(racePopularity("Protoss"));
+
 	// create table on load
+	sortByColumn(4, true);
 	createTable(tableStart, tableEnd)
+	// createNavButtons(4);
 
-	// nav button handlers
+	/*nav button handlers*/
 	// next button
 	$(document).on('click', '.next-button', function() {
-		if(fullMetalData.data.length >= tableEnd + 20) {
+		if(data.length >= tableEnd + 20) {
 			tableStart += 20
 			tableEnd += 20
 			createTable(tableStart, tableEnd);
@@ -928,8 +970,8 @@ var sortByColumn = function(index, reverse) {
 
 	// last button
 	$(document).on('click', '.last-button', function() {
-		tableStart = fullMetalData.data.length - 20
-		tableEnd = fullMetalData.data.length - 1
+		tableStart = data.length - 20
+		tableEnd = data.length - 1
 		createTable(tableStart, tableEnd);
 	})
 
@@ -946,9 +988,6 @@ var sortByColumn = function(index, reverse) {
 		var columnName = $(this).text()
 
 		console.log("columnName: " + columnName)
-		// console.log("columnTracker: " + columnTracker(columnName))
-
-
 		sortByColumn(columnNumber, columnTracker(columnName));
 		tableStart = 0;
 		tableEnd = 19;

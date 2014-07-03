@@ -11,7 +11,30 @@
 
 		<div class="stats-table">
 			<table>
-				
+				<tr>
+					<th>Total Players</th>
+					<th>Games Played</th>
+					<th>Race</th>
+					<th>Popularity</th>
+				</tr>
+				<tr>
+					<td><span class="total-players">players calc</span></td>
+					<td><span class="total-games">games calc</span></td>
+					<td>Zerg</td>
+					<td><span class="zerg-percent">Zerg</span></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>Terran</td>
+					<td><span class="terran-percent">Terran%</span></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>Protoss</td>
+					<td><span class="protoss-percent">Protoss%</span></td>
+				</tr>
 			</table>
 		</div>
 		<div class="data-table">
@@ -22,10 +45,14 @@
 		</div>
 		<!-- next, previous, first, and last buttons -->
 		<div class="nav-buttons">
-			<button class="next-button">next</button>
 			<button class="previous-button">previous</button>
 			<button class="first-button">first</button>
+			<div class="specific-button">
+			<!-- Add buttons depending on total results -->
+			</div>
+
 			<button class="last-button">last</button>
+			<button class="next-button">next</button>
 
 		</div>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
