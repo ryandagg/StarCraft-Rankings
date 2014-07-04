@@ -923,13 +923,11 @@ var nameButtons = function(dataSample) {
 }
 
 // create dynamic buttons for scrolling based on sort method
-// THIS IS NOT WORKING | it is iterating past data.length
-// a possible solution is to loop through data and creat a smaller array to loop through. This will break the problem down into a smaller, easier to understand piece.
 var createNavButtons = function(index) {
 	$(".specific-button").empty();
-	for (var i = 0; i < data.length ; i += 20) {
+	for (var i = 0; i < data.length - 19; i += 20) {
 		$(".specific-button").append(
-			"<button>" + String(nameButtons(data[i][index])) + " - " + String(nameButtons(data[i + 20][index])) + "</button>");
+			"<button>" + String(nameButtons(data[i][index])) + " - " + String(nameButtons(data[i + 19][index])) + "</button>");
 	}
 }
 
@@ -947,7 +945,7 @@ $(document).on('ready', function() {
 	// create table on load
 	sortByColumn(4, true);
 	createTable(tableStart, tableEnd)
-	// createNavButtons(4);
+	createNavButtons(4);
 
 	/*nav button handlers*/
 	// next button
@@ -956,6 +954,7 @@ $(document).on('ready', function() {
 			tableStart += 20
 			tableEnd += 20
 			createTable(tableStart, tableEnd);
+
 		}
 	})
 
@@ -992,6 +991,15 @@ $(document).on('ready', function() {
 		tableStart = 0;
 		tableEnd = 19;
 		createTable(tableStart, tableEnd);
+		createNavButtons(columnNumber);
 
+	})
+
+	// specific nav button handling
+	$(document).on("click", ".specific-button button", function() {
+		var indexMultiple = $(".specific-button button").index(this);
+		tableStart = 0 + indexMultiple * 20;
+		tableEnd = 19  + indexMultiple * 20;
+		createTable(tableStart, tableEnd);
 	})
 });
